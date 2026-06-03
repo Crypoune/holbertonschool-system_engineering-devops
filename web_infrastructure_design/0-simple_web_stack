@@ -1,66 +1,66 @@
-# Task 0: Simple Web Stack
+Task 0: Simple Web Stack
 
-## Overview
+Overview
 
-This document describes a **one-server web infrastructure** hosting `www.foobar.com` using a **LAMP stack** (Linux, Nginx, MySQL, PHP/Python). The infrastructure is simple but has critical limitations.
-
----
-
-## User Request Flow
-
-1. **User Action**: The user types `www.foobar.com` in their browser and presses Enter.
-2. **DNS Resolution**:
-   - The browser sends a **DNS query** to resolve `www.foobar.com`.
-   - The DNS server responds with the **IP address 8.8.8.8** (A record for `foobar.com` + CNAME for `www`).
-3. **HTTP Request**:
-   - The browser sends an **HTTP/HTTPS request** to `8.8.8.8`.
-4. **Server Processing**:
-   - **Nginx** (Web Server) receives the request and forwards dynamic requests to the **Application Server**.
-   - The **Application Server** executes the backend logic (e.g., PHP/Python) and queries the **MySQL Database** if needed.
-   - The **Database** returns the requested data to the Application Server.
-5. **Response**:
-   - The Application Server generates a response (HTML, JSON, etc.) and sends it back to **Nginx**.
-   - **Nginx** returns the response to the user's browser.
+This document describes a one-server web infrastructure hosting www.foobar.com using a LAMP stack (Linux, Nginx, MySQL, PHP/Python). The infrastructure is simple but has critical limitations.
 
 ---
 
-## Infrastructure Components
+User Request Flow
 
-| **Component**          | **Role**                                                                                       |
-| ---------------------- | ---------------------------------------------------------------------------------------------- |
-| **Domain Name**        | Translates `www.foobar.com` to `8.8.8.8` via DNS (CNAME for `www`, A record for `foobar.com`). |
-| **Server (8.8.8.8)**   | Hosts all components (Nginx, App Server, MySQL, Application Files).                            |
-| **Web Server (Nginx)** | Handles HTTP/HTTPS requests, serves static files, and proxies dynamic requests.                |
-| **Application Server** | Executes backend logic (e.g., PHP, Python) to generate dynamic content.                        |
-| **Database (MySQL)**   | Stores and retrieves data (e.g., user profiles, blog posts).                                   |
-| **Application Files**  | Contains the codebase (e.g., PHP scripts, Python apps).                                        |
-
----
-
-## Communication Protocols
-
-- **User ↔ DNS**: DNS Query (UDP).
-- **User ↔ Server**: HTTP/HTTPS (TCP).
-- **Nginx ↔ App Server**: HTTP/HTTPS (TCP) or Unix Socket.
-- **App Server ↔ MySQL**: SQL (TCP/IP).
+1. User Action: The user types www.foobar.com in their browser and presses Enter.
+2. DNS Resolution:
+   - The browser sends a DNS query to resolve www.foobar.com.
+   - The DNS server responds with the IP address 8.8.8.8 (A record for foobar.com + CNAME for www).
+3. HTTP Request:
+   - The browser sends an HTTP/HTTPS request to 8.8.8.8.
+4. Server Processing:
+   - Nginx (Web Server) receives the request and forwards dynamic requests to the Application Server.
+   - The Application Server executes the backend logic (e.g., PHP/Python) and queries the MySQL Database if needed.
+   - The Database returns the requested data to the Application Server.
+5. Response:
+   - The Application Server generates a response (HTML, JSON, etc.) and sends it back to Nginx.
+   - Nginx returns the response to the user's browser.
 
 ---
 
-## Issues with This Infrastructure
+Infrastructure Components
 
-### 1. Single Point of Failure (SPOF)
-
-- **Problem**: If the server (`8.8.8.8`) fails (e.g., hardware crash, power outage), the entire website becomes unavailable.
-- **Impact**: Downtime for all users until the server is restored.
-
-### 2. Downtime During Maintenance
-
-- **Problem**: Deploying new code or restarting Nginx/App Server causes temporary unavailability.
-- **Impact**: Users cannot access the website during maintenance.
-
-### 3. Scalability Limitations
-
-- **Problem**: The single server cannot handle high traffic loads (e.g., 10,000 concurrent users).
-- **Impact**: Slow performance or crashes under heavy load.
+Domain Name translates www.foobar.com to 8.8.8.8 via DNS (CNAME for www, A record for foobar.com).
+Server (8.8.8.8) hosts all components (Nginx, App Server, MySQL, Application Files).
+Web Server (Nginx) handles HTTP/HTTPS requests, serves static files, and proxies dynamic requests.
+Application Server executes backend logic (e.g., PHP, Python) to generate dynamic content.
+Database (MySQL) stores and retrieves data (e.g., user profiles, blog posts).
+Application Files contains the codebase (e.g., PHP scripts, Python apps).
 
 ---
+
+Communication Protocols
+
+- User ↔ DNS: DNS Query (UDP).
+- User ↔ Server: HTTP/HTTPS (TCP).
+- Nginx ↔ App Server: HTTP/HTTPS (TCP) or Unix Socket.
+- App Server ↔ MySQL: SQL (TCP/IP).
+
+---
+
+Issues with This Infrastructure
+
+1. Single Point of Failure (SPOF)
+
+- Problem: If the server (8.8.8.8) fails (e.g., hardware crash, power outage), the entire website becomes unavailable.
+- Impact: Downtime for all users until the server is restored.
+
+2. Downtime During Maintenance
+
+- Problem: Deploying new code or restarting Nginx/App Server causes temporary unavailability.
+- Impact: Users cannot access the website during maintenance.
+
+3. Scalability Limitations
+
+- Problem: The single server cannot handle high traffic loads (e.g., 10,000 concurrent users).
+- Impact: Slow performance or crashes under heavy load.
+
+---
+
+Link to jpeg:
