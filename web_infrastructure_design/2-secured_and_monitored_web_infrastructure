@@ -1,0 +1,33 @@
+Task 2: Secured and monitored web infrastructure
+
+Why each element is added
+
+- 3 firewalls Each layer of the stack (edge, app, DB) gets its own traffic filter
+- SSL certificate Encrypts traffic between the user and the load balancer
+- 3 monitoring clients One per critical tier (LB, app servers, DB) to collect metrics and logs
+
+Firewalls
+
+A firewall inspects incoming and outgoing network traffic and blocks anything not explicitly allowed. FW1 allows only port 443 (HTTPS). FW2 accepts connections from the load balancer only. FW3 accepts MySQL connections (port 3306) from the application servers only.
+
+Why HTTPS
+
+Without encryption, any router or ISP between the user and the server can read or tamper with the data — passwords, session cookies, personal information. HTTPS wraps all traffic in TLS so it is unreadable in transit.
+
+Monitoring
+
+Monitoring agents (e.g. Sumo Logic collectors) run on each server and continuously ship logs, metrics, and events to a central dashboard. This enables alerting on anomalies, tracking performance over time, and faster incident diagnosis.
+
+How data is collected
+
+Each monitoring client tails log files, scrapes system metrics (CPU, RAM, disk, network), and forwards structured data to the Sumo Logic ingestion endpoint over HTTPS.
+
+How to monitor Nginx QPS
+
+Enable the Nginx stub_status module — it exposes a live metrics endpoint. Point the monitoring agent at that endpoint and track requests / second on the dashboard. Set alerts when QPS drops to zero (server down) or spikes beyond capacity.
+
+Issues
+
+- SSL terminates at the load balancer — after HAProxy decrypts the traffic, it forwards plain HTTP internally to the app servers. Any attacker who gains access to the internal network can read all traffic unencrypted. The fix is end-to-end TLS (re-encrypting traffic between the LB and the app servers).
+- Single MySQL Primary for writes — all write operations funnel through one node. If it goes down, no data can be written until failover is complete, and a manual setup has no automatic failover.
+- All servers carry every component — when the database needs more resources, the whole server must be scaled rather than just the DB tier. A bug in the app server can also starve the database on the same machine. Best practice is to separate concerns into dedicated tiers so each can scale and fail independently.
