@@ -1,0 +1,29 @@
+Task 3: Scale up
+
+Why each element is added
+
+- Extra server (4th server total) — splitting the stack into dedicated tiers requires one
+  server per component. Previously, the web server, application server, and database
+  all shared the same machine; now each lives on its own host and can be scaled,
+  secured, and maintained independently.
+
+- HAProxy configured as a cluster (2 load balancers) — the single load balancer
+  was a SPOF. Adding a second HAProxy node in an Active-Active cluster means both
+  nodes handle live traffic simultaneously. They share a virtual IP and exchange
+  heartbeat signals — if one node fails, the other keeps serving requests with zero
+  downtime.
+
+- Dedicated web server (Nginx) — Nginx is optimised for serving static assets
+  (HTML, CSS, images, JS) and terminating TLS. Isolating it allows tuning of worker
+  processes, connection limits, and caching without affecting the application layer.
+
+- Dedicated application server — the app server runs business logic (Python, PHP,
+  Node.js, etc.) and is often the most CPU- and memory-intensive component. A
+  dedicated machine allows horizontal scaling (adding more app servers behind the
+  LB) without touching the web or DB tiers.
+
+- Dedicated database server — databases are I/O-bound and need predictable disk
+  and memory resources. Isolating the DB prevents resource contention with the app
+  layer, allows stricter firewall rules (only the app server can reach port 3306), and
+  enables DB-optimised storage configuration (fast SSDs, large RAM for the buffer
+  pool)
