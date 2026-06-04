@@ -1,64 +1,22 @@
 Task 0: Simple Web Stack
 
-Overview
+Infrastructure flow
 
-This document describes a one-server web infrastructure hosting www.foobar.com using a LAMP stack (Linux, Nginx, MySQL, PHP/Python). The infrastructure is simple but has critical limitations.
-
----
-
-User Request Flow
-
-1. User Action: The user types www.foobar.com in their browser and presses Enter.
-2. DNS Resolution:
-   - The browser sends a DNS query to resolve www.foobar.com.
-   - The DNS server responds with the IP address 8.8.8.8 (A record for foobar.com + CNAME for www).
-3. HTTP Request:
-   - The browser sends an HTTP/HTTPS request to 8.8.8.8.
-4. Server Processing:
-   - Nginx (Web Server) receives the request and forwards dynamic requests to the Application Server.
-   - The Application Server executes the backend logic (e.g., PHP/Python) and queries the MySQL Database if needed.
-   - The Database returns the requested data to the Application Server.
-5. Response:
-   - The Application Server generates a response (HTML, JSON, etc.) and sends it back to Nginx.
-   - Nginx returns the response to the user's browser.
+A user types www.foobar.com in their browser. A DNS query resolves the www A record to IP 8.8.8.8. The browser then sends an HTTP/HTTPS request to that IP. Nginx receives the request and either serves static files directly or forwards dynamic requests to the application server. The application server executes the business logic using the codebase (PHP, Python, etc.), queries MySQL for data, and Nginx sends the response back to the user.
 
 ---
 
-Infrastructure Components
+Key concepts
 
-Domain Name translates www.foobar.com to 8.8.8.8 via DNS (CNAME for www, A record for foobar.com).
-Server (8.8.8.8) hosts all components (Nginx, App Server, MySQL, Application Files).
-Web Server (Nginx) handles HTTP/HTTPS requests, serves static files, and proxies dynamic requests.
-Application Server executes backend logic (e.g., PHP, Python) to generate dynamic content.
-Database (MySQL) stores and retrieves data (e.g., user profiles, blog posts).
-Application Files contains the codebase (e.g., PHP scripts, Python apps).
+1. Server: a physical or virtual machine that listens for and responds to network requests.
+2. Domain name: maps a human-readable address to an IP address.
+3. www DNS record: an A record pointing www.foobar.com to 8.8.8.8.
+4. Communication protocol: the server communicates with the user via HTTP/HTTPS over TCP/IP.
 
 ---
 
-Communication Protocols
+Issues
 
-- User ↔ DNS: DNS Query (UDP).
-- User ↔ Server: HTTP/HTTPS (TCP).
-- Nginx ↔ App Server: HTTP/HTTPS (TCP) or Unix Socket.
-- App Server ↔ MySQL: SQL (TCP/IP).
-
----
-
-Issues with This Infrastructure
-
-1. Single Point of Failure (SPOF)
-
-- Problem: If the server (8.8.8.8) fails (e.g., hardware crash, power outage), the entire website becomes unavailable.
-- Impact: Downtime for all users until the server is restored.
-
-2. Downtime During Maintenance
-
-- Problem: Deploying new code or restarting Nginx/App Server causes temporary unavailability.
-- Impact: Users cannot access the website during maintenance.
-
-3. Scalability Limitations
-
-- Problem: The single server cannot handle high traffic loads (e.g., 10,000 concurrent users).
-- Impact: Slow performance or crashes under heavy load.
-
----
+- SPOF (single point of failure): if the single server goes down, the entire site is unreachable.
+- Maintenance downtime: restarting Nginx to deploy new code takes the site offline.
+- No scalability: a single server cannot handle traffic spikes; there is no load balancer or horizontal scaling.
