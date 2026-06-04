@@ -1,0 +1,28 @@
+Task 1: Distributed web infrastructure
+
+Why each element is added
+
+- HAProxy: distributes incoming traffic across both servers so no single app server is overwhelmed.
+- 2 servers: redundancy: if one goes down, the other keeps serving requests.
+- MySQL Primary-Replica cluster: offloads read traffic to the replica and protects data if one DB node fails.
+
+Load balancer algorithm
+
+Each new request is forwarded to the next server in turn (Server 1 → Server 2 → Server 1 → …). Simple and effective when both servers have similar capacity.
+
+Active-Active vs Active-Passive
+
+- Active-Active (used here): both servers handle live traffic simultaneously, improving performance and resource usage.
+- Active-Passive — one server handles all traffic while the other sits idle and only takes over if the primary fails. Safer but wasteful.
+
+Primary-Replica (Master-Slave) cluster
+
+The Primary node accepts all write operations (INSERT, UPDATE, DELETE) and streams a replication log to the Replica. The Replica stays in sync and handles read-only queries. The application writes exclusively to the Primary; reads can be distributed between both nodes.
+
+Issues
+
+- HAProxy is a SPOF: If the load balancer crashes, the whole site goes down
+- No firewall: All ports are exposed, any machine can probe the servers directly
+- No HTTPS: Traffic is unencrypted, vulnerable to interception
+- No monitoring: Failures go undetected until users complain
+- DB Primary is a SPOF: If it goes down, all writes fail with no automatic failover
