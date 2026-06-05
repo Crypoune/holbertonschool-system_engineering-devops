@@ -2,7 +2,7 @@ Task 0: Simple Web Stack
 
 Infrastructure flow
 
-A user types www.foobar.com in their browser. A DNS query resolves the www A record to IP 8.8.8.8. The browser then sends an HTTP/HTTPS request to that IP. Nginx receives the request and either serves static files directly or forwards dynamic requests to the application server. The application server executes the business logic using the codebase (PHP, Python, etc.), queries MySQL for data, and Nginx sends the response back to the user.
+A user types www.foobar.com in their browser. A DNS (Domain Name System) query resolves the www A record to IP 8.8.8.8. The browser then sends an HTTP/HTTPS request to that IP (Internet Protocol). Nginx receives the request and either serves static files directly or forwards dynamic requests to the application server. The application server executes the business logic using the codebase (PHP, Python, etc.), queries MySQL for data, and Nginx sends the response back to the user.
 
 ---
 
