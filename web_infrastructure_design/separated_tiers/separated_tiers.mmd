@@ -1,0 +1,34 @@
+flowchart TD
+    User["User"] --> LB1["Load balancer (HAProxy)"]
+
+    LB1 -->|failover| LB2["Load balancer (HAProxy)"]
+
+    subgraph WebTier["Web tier"]
+        Web1["Web server (Nginx)"]
+        Web2["Web server (Nginx)"]
+    end
+
+    subgraph AppTier["Application tier"]
+        App1["Application server"]
+        App2["Application server"]
+    end
+
+    subgraph DBTier["Database tier"]
+        DBPrimary["Database primary (MySQL)"]
+        DBReplica["Database replica (MySQL)"]
+    end
+
+    LB1 --> Web1
+    LB1 --> Web2
+    LB2 --> Web1
+    LB2 --> Web2
+
+    Web1 --> App1
+    Web1 --> App2
+    Web2 --> App1
+    Web2 --> App2
+
+    App1 --> DBPrimary
+    App2 --> DBPrimary
+
+    DBPrimary -->|replication| DBReplica
