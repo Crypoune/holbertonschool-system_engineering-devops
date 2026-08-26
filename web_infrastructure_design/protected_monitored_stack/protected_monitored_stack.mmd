@@ -1,0 +1,39 @@
+flowchart TD
+    User["User"] -->|HTTPS| FW1["Firewall"]
+    FW1 --> Domain["www.foobar.com"]
+    Domain --> DNS["DNS"]
+    DNS --> LB["Load balancer (HAProxy)"]
+
+    LB --> FW2["Firewall"]
+    LB --> FW3["Firewall"]
+
+    subgraph Node1["Web/App node 1"]
+        Web1["Web server (Nginx)"]
+        App1["Application server"]
+        Web1 --> App1
+    end
+
+    subgraph Node2["Web/App node 2"]
+        Web2["Web server (Nginx)"]
+        App2["Application server"]
+        Web2 --> App2
+    end
+
+    FW2 --> Web1
+    FW3 --> Web2
+
+    App1 --> DBPrimary["Database primary (MySQL)"]
+    App2 --> DBPrimary
+
+    DBPrimary -->|replication| DBReplica["Database replica (MySQL)"]
+
+    Web1 --> LB
+    Web2 --> LB
+    LB --> User
+
+    LB -.->|"Metrics"| Monitoring["Monitoring system"]
+    Web1 -.->|"QPS metrics"| Monitoring
+    Web2 -.->|"Metrics"| Monitoring
+    App1 -.->|"Metrics"| Monitoring
+    App2 -.->|"Metrics"| Monitoring
+    DBPrimary -.->|"Metrics"| Monitoring
