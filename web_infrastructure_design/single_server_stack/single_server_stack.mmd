@@ -1,0 +1,21 @@
+flowchart TD
+    User[User] --> Domain[www.foobar.com]
+    Domain --> DNS[DNS]
+    DNS -->|A record → 8.8.8.8| Web
+
+    subgraph Server["Single Server"]
+        Web[Web server (Nginx)]
+        AppServer[Application server]
+        AppCode[Application code]
+        DB[Database (PotsgreSQL/MySQL)]
+
+        Web --> AppServer
+        AppServer --> AppCode
+        AppCode --> DB
+
+        DB -->|Response| AppCode
+        AppCode -->|Response| AppServer
+        AppServer -->|Response| Web
+    end
+
+    Web -->|Response| User
