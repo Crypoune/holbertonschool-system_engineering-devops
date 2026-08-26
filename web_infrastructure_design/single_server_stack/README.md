@@ -56,10 +56,10 @@ TCP provides reliable communication between the client and server, while IP is r
 
 LAMP stands for:
 
-- **Linux** — operating system
-- **Apache** — web server
-- **MySQL** — database
-- **PHP** — programming language
+- **Linux** - operating system
+- **Apache** - web server
+- **MySQL** - database
+- **PHP** - programming language
 
 This architecture is LAMP-like because it follows the same general idea of combining an operating system, web server, application layer, and database. However, it is not a literal LAMP stack because it uses **Nginx instead of Apache**, and the application technology is not necessarily PHP.
 
